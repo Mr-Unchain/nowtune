@@ -2,112 +2,22 @@
 
 import { useMemo, useState } from "react";
 
-const activities = [
-  {
-    id: "p1",
-    type: "post" as const,
-    user: { name: "Aiko Morita", handle: "aikom", avatar: "AM" },
-    track: {
-      title: "Neon Skyline",
-      artist: "Shibuya Echo",
-      service: "YouTube",
-      url: "https://youtube.com/watch?v=neon-skyline",
-    },
-    comment:
-      "Rainy night soundtrack. The synths shimmer and the bass line is just perfect for a focus session.",
-    likes: 32,
-    createdAt: "2h ago",
-  },
-  {
-    id: "l1",
-    type: "listening" as const,
-    user: { name: "Kenji Yamato", handle: "kenji", avatar: "KY" },
-    track: {
-      title: "Blue Monday",
-      artist: "New Order",
-      service: "Spotify",
-      url: "https://open.spotify.com/track/bluemonday",
-    },
-    status: "Listening now",
-    createdAt: "just now",
-  },
-  {
-    id: "p2",
-    type: "post" as const,
-    user: { name: "Sara Ito", handle: "sara", avatar: "SI" },
-    track: {
-      title: "Sunset Rollercoaster",
-      artist: "Slow Waves",
-      service: "Apple Music",
-      url: "https://music.apple.com/slow-waves",
-    },
-    comment: "Breezy guitar riffs. Anyone else into city pop this week?",
-    likes: 18,
-    createdAt: "5h ago",
-  },
-  {
-    id: "l2",
-    type: "listening" as const,
-    user: { name: "Maya Nishida", handle: "maya", avatar: "MN" },
-    track: {
-      title: "Crystal Dreaming",
-      artist: "Night Tempo",
-      service: "YouTube",
-      url: "https://youtube.com/watch?v=crystal-dreaming",
-    },
-    status: "Listening now",
-    createdAt: "1d ago",
-  },
-  {
-    id: "p3",
-    type: "post" as const,
-    user: { name: "Leo Kinoshita", handle: "leo", avatar: "LK" },
-    track: {
-      title: "Velvet Highway",
-      artist: "Tokyo Midnight",
-      service: "SoundCloud",
-      url: "https://soundcloud.com/velvet-highway",
-    },
-    comment: "Late drive essential. The sax outro is gorgeous.",
-    likes: 12,
-    createdAt: "2d ago",
-  },
+import { uiText } from "@/config/strings";
+import { TimelineFilter, TimelineItem } from "@/lib/domain/types";
+import { timelineItems } from "@/lib/mock/timelineData";
+
+const filters: { id: TimelineFilter; label: string }[] = [
+  { id: "all", label: uiText.timeline.filters.all },
+  { id: "post", label: uiText.timeline.filters.post },
+  { id: "listening", label: uiText.timeline.filters.listening },
 ];
-
-const quickActions = [
-  {
-    title: "Share a post",
-    description: "Pick a track, add a comment, and drop it into the timeline.",
-    badge: "Post",
-  },
-  {
-    title: "Start listening",
-    description: "Tell friends what you're playing right now with one tap.",
-    badge: "Listening",
-  },
-  {
-    title: "Update profile",
-    description: "Set your display name, avatar, and a short bio to make it yours.",
-    badge: "Profile",
-  },
-];
-
-const filters = [
-  { id: "all", label: "All" },
-  { id: "post", label: "Posts" },
-  { id: "listening", label: "Listening" },
-];
-
-type Activity = (typeof activities)[number];
-
-type FilterId = (typeof filters)[number]["id"];
 
 export default function Home() {
-  const [filter, setFilter] = useState<FilterId>("all");
+  const [filter, setFilter] = useState<TimelineFilter>("all");
 
   const visibleActivities = useMemo(() => {
-    if (filter === "all") return activities;
-    return activities.filter((item) => item.type === filter);
+    if (filter === "all") return timelineItems;
+    return timelineItems.filter((item) => item.type === filter);
   }, [filter]);
 
   return (
@@ -115,28 +25,29 @@ export default function Home() {
       <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-8 shadow-xl shadow-black/30">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-3">
-            <p className="text-sm uppercase tracking-[0.2em] text-slate-400">Timeline</p>
-            <h1 className="text-3xl font-semibold text-white">NowTune feed</h1>
-            <p className="max-w-2xl text-slate-300">
-              See what your friends are posting and listening to in one mixed feed. Choose a
-              tab to focus on posts or live listening updates.
+            <p className="text-sm uppercase tracking-[0.2em] text-slate-400">
+              {uiText.timeline.label}
             </p>
+            <h1 className="text-3xl font-semibold text-white">{uiText.timeline.title}</h1>
+            <p className="max-w-2xl text-slate-300">{uiText.timeline.description}</p>
             <div className="flex flex-wrap gap-3 text-sm text-slate-200">
-              <span className="rounded-full bg-indigo-500/15 px-3 py-1 text-indigo-200">
-                Posts + Listening activities
-              </span>
-              <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-emerald-200">
-                Likes & follows coming next
-              </span>
+              {uiText.timeline.highlights.map((highlight) => (
+                <span
+                  key={highlight}
+                  className="rounded-full bg-indigo-500/15 px-3 py-1 text-indigo-200"
+                >
+                  {highlight}
+                </span>
+              ))}
             </div>
           </div>
           <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3 text-sm text-slate-200">
-            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">MVP Routes</p>
+            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">MVPルート</p>
             <ul className="mt-2 space-y-1">
-              <li>/ – timeline</li>
-              <li>/post – create post</li>
-              <li>/listening – start/stop listening</li>
-              <li>/profile/[id] – user profile</li>
+              <li>/ – タイムライン</li>
+              <li>/post – 投稿作成</li>
+              <li>/listening – リスニング開始/停止</li>
+              <li>/profile/[id] – プロフィール</li>
             </ul>
           </div>
         </div>
@@ -146,8 +57,8 @@ export default function Home() {
         <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl shadow-black/30">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
             <div>
-              <h2 className="text-lg font-semibold text-white">Activity</h2>
-              <p className="text-sm text-slate-400">Mixed feed of posts and listening updates.</p>
+              <h2 className="text-lg font-semibold text-white">{uiText.timeline.activityTitle}</h2>
+              <p className="text-sm text-slate-400">{uiText.timeline.activityDescription}</p>
             </div>
             <div className="flex items-center gap-2 rounded-full bg-slate-800/70 p-1 text-sm text-slate-200">
               {filters.map((item) => (
@@ -175,13 +86,10 @@ export default function Home() {
 
         <aside className="space-y-4">
           <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/30">
-            <h3 className="text-base font-semibold text-white">Quick actions</h3>
-            <p className="text-sm text-slate-400">
-              Build out the rest of the spec: posting, listening controls, profile pages, and
-              lightweight auth.
-            </p>
+            <h3 className="text-base font-semibold text-white">{uiText.timeline.quickActionsTitle}</h3>
+            <p className="text-sm text-slate-400">{uiText.timeline.quickActionsDescription}</p>
             <div className="mt-4 space-y-3">
-              {quickActions.map((action) => (
+              {uiText.timeline.quickActions.map((action) => (
                 <div
                   key={action.title}
                   className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 hover:border-indigo-600/60"
@@ -192,7 +100,7 @@ export default function Home() {
                       <p className="text-white">{action.title}</p>
                     </div>
                     <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-200">
-                      Soon
+                      {uiText.common.soon}
                     </span>
                   </div>
                   <p className="mt-2 text-sm text-slate-400">{action.description}</p>
@@ -207,17 +115,14 @@ export default function Home() {
                 NT
               </div>
               <div>
-                <p className="text-sm text-slate-300">Prototype profile</p>
-                <p className="text-lg font-semibold text-white">You</p>
+                <p className="text-sm text-slate-300">プロトタイププロフィール</p>
+                <p className="text-lg font-semibold text-white">{uiText.timeline.profileCardTitle}</p>
               </div>
             </div>
-            <p className="mt-3 text-sm text-slate-400">
-              Profiles show your posts, recent listening, and follow controls. Hook up data and
-              Supabase auth to complete this step.
-            </p>
+            <p className="mt-3 text-sm text-slate-400">{uiText.timeline.profileCardDescription}</p>
             <div className="mt-4 flex gap-2 text-xs text-slate-300">
-              <span className="rounded-full bg-slate-800 px-3 py-1">Following 26</span>
-              <span className="rounded-full bg-slate-800 px-3 py-1">Followers 31</span>
+              <span className="rounded-full bg-slate-800 px-3 py-1">{`${uiText.timeline.following} 26`}</span>
+              <span className="rounded-full bg-slate-800 px-3 py-1">{`${uiText.timeline.followers} 31`}</span>
             </div>
           </section>
         </aside>
@@ -226,7 +131,7 @@ export default function Home() {
   );
 }
 
-function ActivityCard({ activity }: { activity: Activity }) {
+function ActivityCard({ activity }: { activity: TimelineItem }) {
   const isPost = activity.type === "post";
   return (
     <article className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 transition hover:-translate-y-0.5 hover:border-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/10">
@@ -247,7 +152,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.2em] text-slate-400">
-              {isPost ? "Post" : "Listening"}
+              {isPost ? uiText.common.postBadge : uiText.common.listeningBadge}
             </p>
             <p className="text-lg font-semibold text-white">{activity.track.title}</p>
             <p className="text-sm text-slate-300">{activity.track.artist}</p>
@@ -259,7 +164,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
             target="_blank"
             rel="noreferrer"
           >
-            Open track
+            {uiText.common.openTrack}
           </a>
         </div>
 
@@ -268,7 +173,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
         ) : (
           <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-3 py-1 text-xs text-emerald-200">
             <span className="h-2 w-2 rounded-full bg-emerald-400" />
-            {activity.status ?? "Listening"}
+            {activity.status ?? uiText.common.listeningBadge}
           </div>
         )}
       </div>
@@ -279,12 +184,10 @@ function ActivityCard({ activity }: { activity: Activity }) {
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-800 text-indigo-200">
               ♥
             </span>
-            <span>
-              {activity.likes} like{activity.likes === 1 ? "" : "s"}
-            </span>
+            <span>いいね {activity.likes}件</span>
           </div>
           <span className="rounded-full bg-slate-800 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-slate-300">
-            Comment ready
+            {uiText.common.commentReady}
           </span>
         </div>
       ) : null}

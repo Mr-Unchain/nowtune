@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 
+import { uiText } from "@/config/strings";
+
 const defaultTrack = {
   title: "Blue Monday",
   artist: "New Order",
@@ -14,28 +16,24 @@ export default function ListeningPage() {
   const [isActive, setIsActive] = useState(true);
 
   const statusLabel = useMemo(
-    () => (isActive ? "Listening now" : "Stopped"),
+    () => (isActive ? uiText.listening.statusListening : uiText.listening.statusStopped),
     [isActive],
   );
 
   return (
     <div className="space-y-6">
       <header className="rounded-2xl border border-slate-800 bg-slate-900/70 p-8 shadow-xl shadow-black/30">
-        <p className="text-sm uppercase tracking-[0.2em] text-slate-400">Listening</p>
-        <h1 className="mt-2 text-3xl font-semibold text-white">Start or stop listening</h1>
-        <p className="mt-2 max-w-2xl text-slate-300">
-          This page mirrors the `/api/listening/start` and `/api/listening/stop` endpoints. Capture the
-          active track, end previous sessions, and keep the timeline updated with lightweight
-          listening pings.
-        </p>
+        <p className="text-sm uppercase tracking-[0.2em] text-slate-400">{uiText.listening.label}</p>
+        <h1 className="mt-2 text-3xl font-semibold text-white">{uiText.listening.title}</h1>
+        <p className="mt-2 max-w-2xl text-slate-300">{uiText.listening.description}</p>
       </header>
 
       <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
         <section className="space-y-5 rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl shadow-black/30">
           <div className="flex items-center justify-between border-b border-slate-800 pb-4">
             <div>
-              <h2 className="text-lg font-semibold text-white">Current session</h2>
-              <p className="text-sm text-slate-400">Only one active listening activity at a time.</p>
+              <h2 className="text-lg font-semibold text-white">{uiText.listening.currentSessionTitle}</h2>
+              <p className="text-sm text-slate-400">{uiText.listening.currentSessionDescription}</p>
             </div>
             <span
               className={`rounded-full px-3 py-1 text-xs uppercase tracking-[0.18em] ${
@@ -51,7 +49,7 @@ export default function ListeningPage() {
           <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-950/70 p-5">
             <div className="grid gap-3 md:grid-cols-2">
               <label className="space-y-2 text-sm text-slate-200">
-                <span>Title</span>
+                <span>{uiText.listening.form.title}</span>
                 <input
                   className="w-full rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-2 text-white outline-none focus:border-indigo-500"
                   value={track.title}
@@ -59,7 +57,7 @@ export default function ListeningPage() {
                 />
               </label>
               <label className="space-y-2 text-sm text-slate-200">
-                <span>Artist</span>
+                <span>{uiText.listening.form.artist}</span>
                 <input
                   className="w-full rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-2 text-white outline-none focus:border-indigo-500"
                   value={track.artist}
@@ -67,7 +65,7 @@ export default function ListeningPage() {
                 />
               </label>
               <label className="space-y-2 text-sm text-slate-200">
-                <span>Service</span>
+                <span>{uiText.listening.form.service}</span>
                 <select
                   className="w-full rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-2 text-white outline-none focus:border-indigo-500"
                   value={track.service}
@@ -80,7 +78,7 @@ export default function ListeningPage() {
                 </select>
               </label>
               <label className="space-y-2 text-sm text-slate-200">
-                <span>Track URL</span>
+                <span>{uiText.listening.form.url}</span>
                 <input
                   className="w-full rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-2 text-white outline-none focus:border-indigo-500"
                   value={track.url}
@@ -95,18 +93,16 @@ export default function ListeningPage() {
                 onClick={() => setIsActive(true)}
                 type="button"
               >
-                Start listening
+                {uiText.listening.form.start}
               </button>
               <button
                 className="rounded-full border border-slate-700 px-4 py-2 text-white hover:border-indigo-400"
                 onClick={() => setIsActive(false)}
                 type="button"
               >
-                Stop
+                {uiText.listening.form.stop}
               </button>
-              <p className="text-xs text-slate-400">
-                Starting ends any previous active activity and records `started_at`/`ended_at`.
-              </p>
+              <p className="text-xs text-slate-400">{uiText.listening.form.hint}</p>
             </div>
           </div>
         </section>
@@ -114,19 +110,19 @@ export default function ListeningPage() {
         <aside className="space-y-4">
           <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/30">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-semibold text-white">Timeline preview</h3>
-              <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">Listening</span>
+              <h3 className="text-base font-semibold text-white">{uiText.listening.previewTitle}</h3>
+              <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">{uiText.common.listeningBadge}</span>
             </div>
             <div className="mt-4 space-y-3 rounded-xl border border-slate-800 bg-slate-950/70 p-4">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-sm text-slate-200">You</p>
+                  <p className="text-sm text-slate-200">{uiText.timeline.profileCardTitle}</p>
                   <p className="text-xs text-slate-500">@nowtune</p>
                 </div>
-                <span className="text-xs text-slate-500">just now</span>
+                <span className="text-xs text-slate-500">たった今</span>
               </div>
               <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-4">
-                <p className="text-sm uppercase tracking-[0.2em] text-slate-400">Listening</p>
+                <p className="text-sm uppercase tracking-[0.2em] text-slate-400">{uiText.common.listeningBadge}</p>
                 <p className="text-lg font-semibold text-white">{track.title}</p>
                 <p className="text-sm text-slate-300">{track.artist}</p>
                 <p className="text-xs text-slate-500">{track.service}</p>
@@ -141,11 +137,11 @@ export default function ListeningPage() {
           </section>
 
           <section className="rounded-2xl border border-indigo-500/50 bg-indigo-500/10 p-5 text-sm text-indigo-50">
-            <h4 className="text-base font-semibold text-white">Endpoint checklist</h4>
+            <h4 className="text-base font-semibold text-white">{uiText.listening.checklistTitle}</h4>
             <ul className="mt-3 space-y-2 list-disc pl-5">
-              <li>POST `/api/listening/start` – create new activity.</li>
-              <li>POST `/api/listening/stop` – set `ended_at` for the active row.</li>
-              <li>Only one active listening activity per user at a time.</li>
+              {uiText.listening.checklist.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
             </ul>
           </section>
         </aside>

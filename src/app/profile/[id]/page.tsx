@@ -1,3 +1,4 @@
+import { uiText } from "@/config/strings";
 import type { Metadata } from "next";
 
 type ProfileData = {
@@ -28,7 +29,7 @@ const profiles: Record<string, ProfileData> = {
     id: "you",
     name: "NowTune Prototype",
     handle: "nowtune",
-    bio: "Building a cozy feed for music lovers.",
+    bio: "音楽好きのための心地よいフィードを構築中。",
     followers: 31,
     following: 26,
     posts: [
@@ -36,15 +37,15 @@ const profiles: Record<string, ProfileData> = {
         id: "p1",
         title: "Neon Skyline",
         artist: "Shibuya Echo",
-        comment: "Rainy night soundtrack. The synths shimmer and the bass line is perfect.",
-        createdAt: "2h ago",
+        comment: "雨の夜に聴きたくなるシンセウェーブ。ベースが心地よい。",
+        createdAt: "2時間前",
       },
       {
         id: "p2",
         title: "Sunset Rollercoaster",
         artist: "Slow Waves",
-        comment: "Breezy guitar riffs and city pop vibes.",
-        createdAt: "5h ago",
+        comment: "風を感じるギターとシティポップの余韻。",
+        createdAt: "5時間前",
       },
     ],
     listening: [
@@ -52,14 +53,14 @@ const profiles: Record<string, ProfileData> = {
         id: "l1",
         title: "Blue Monday",
         artist: "New Order",
-        startedAt: "just now",
+        startedAt: "たった今",
       },
       {
         id: "l2",
         title: "Crystal Dreaming",
         artist: "Night Tempo",
-        startedAt: "1d ago",
-        endedAt: "1h later",
+        startedAt: "1日前",
+        endedAt: "1時間後",
       },
     ],
   },
@@ -67,7 +68,7 @@ const profiles: Record<string, ProfileData> = {
 
 export function generateMetadata(): Metadata {
   return {
-    title: "Profile – NowTune",
+    title: `${uiText.profile.label} – ${uiText.appName}`,
   };
 }
 
@@ -83,17 +84,17 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
               {profile.name.slice(0, 2)}
             </div>
             <div>
-              <p className="text-sm text-slate-400">Profile</p>
+              <p className="text-sm text-slate-400">{uiText.profile.label}</p>
               <h1 className="text-3xl font-semibold text-white">{profile.name}</h1>
               <p className="text-sm text-slate-500">@{profile.handle}</p>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-3 text-sm text-slate-200">
             <button className="rounded-full bg-indigo-500 px-4 py-2 font-semibold text-white shadow-lg shadow-indigo-500/30">
-              Follow
+              {uiText.profile.follow}
             </button>
-            <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">Followers {profile.followers}</span>
-            <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">Following {profile.following}</span>
+            <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">{`${uiText.timeline.followers} ${profile.followers}`}</span>
+            <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">{`${uiText.timeline.following} ${profile.following}`}</span>
           </div>
         </div>
         <p className="mt-3 max-w-2xl text-sm text-slate-300">{profile.bio}</p>
@@ -103,11 +104,11 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
         <section className="space-y-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl shadow-black/30">
           <div className="flex items-center justify-between border-b border-slate-800 pb-4">
             <div>
-              <h2 className="text-lg font-semibold text-white">Recent posts</h2>
-              <p className="text-sm text-slate-400">Embed track + comment from `/api/posts`.</p>
+              <h2 className="text-lg font-semibold text-white">{uiText.profile.recentPosts}</h2>
+              <p className="text-sm text-slate-400">{uiText.profile.recentPostsDescription}</p>
             </div>
             <span className="rounded-full bg-indigo-500/15 px-3 py-1 text-xs uppercase tracking-[0.18em] text-indigo-200">
-              Posts
+              {uiText.common.postBadge}
             </span>
           </div>
           {profile.posts.map((post) => (
@@ -118,11 +119,11 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
               <header className="flex items-center justify-between text-xs text-slate-500">
                 <span>{post.createdAt}</span>
                 <span className="rounded-full bg-slate-800 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-slate-300">
-                  Comment ready
+                  {uiText.profile.commentReady}
                 </span>
               </header>
               <div>
-                <p className="text-sm uppercase tracking-[0.2em] text-slate-400">Post</p>
+                <p className="text-sm uppercase tracking-[0.2em] text-slate-400">{uiText.common.postBadge}</p>
                 <p className="text-lg font-semibold text-white">{post.title}</p>
                 <p className="text-sm text-slate-300">{post.artist}</p>
               </div>
@@ -134,8 +135,8 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
         <aside className="space-y-4">
           <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/30">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-semibold text-white">Listening history</h3>
-              <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">Listening</span>
+              <h3 className="text-base font-semibold text-white">{uiText.profile.listeningHistory}</h3>
+              <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">{uiText.common.listeningBadge}</span>
             </div>
             <div className="mt-4 space-y-3">
               {profile.listening.map((activity) => (
@@ -146,16 +147,16 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
                   <div className="flex items-center justify-between text-xs text-slate-500">
                     <span>{activity.startedAt}</span>
                     <span className="rounded-full bg-slate-800 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-slate-300">
-                      {activity.endedAt ? "Ended" : "Active"}
+                      {activity.endedAt ? uiText.profile.ended : uiText.profile.live}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm uppercase tracking-[0.18em] text-slate-400">Listening</p>
+                  <p className="mt-1 text-sm uppercase tracking-[0.18em] text-slate-400">{uiText.common.listeningBadge}</p>
                   <p className="text-base font-semibold text-white">{activity.title}</p>
                   <p className="text-sm text-slate-300">{activity.artist}</p>
                   {activity.endedAt ? (
-                    <p className="text-xs text-slate-500">Ended: {activity.endedAt}</p>
+                    <p className="text-xs text-slate-500">終了: {activity.endedAt}</p>
                   ) : (
-                    <p className="text-xs text-emerald-200">Live now</p>
+                    <p className="text-xs text-emerald-200">{uiText.profile.live}</p>
                   )}
                 </div>
               ))}
@@ -163,11 +164,11 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
           </section>
 
           <section className="rounded-2xl border border-indigo-500/50 bg-indigo-500/10 p-5 text-sm text-indigo-50">
-            <h4 className="text-base font-semibold text-white">API wiring</h4>
+            <h4 className="text-base font-semibold text-white">{uiText.profile.apiWiringTitle}</h4>
             <ul className="mt-3 space-y-2 list-disc pl-5">
-              <li>GET `/api/users/:id` – return user info + recent posts/listening.</li>
-              <li>POST `/api/users/:id/follow` – toggle follow status.</li>
-              <li>Use the same activity/post cards as the timeline for consistency.</li>
+              {uiText.profile.apiWiringItems.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
             </ul>
           </section>
         </aside>
