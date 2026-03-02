@@ -1,21 +1,47 @@
 # DB & Auth Plan (MVP)
 
-- ライブラリ: Supabase プロジェクト + @supabase/supabase-js クライアント、Drizzle ORM for SQL schema management。
-- スキーマ配置: `src/lib/db/schema.ts` にテーブル定義（users, tracks, posts, listening_activities, likes, follows）。
-- クライアント配置: `src/lib/db/client.ts` で Supabase クライアント生成と Drizzle 接続を初期化。
-- API 実装の順序（想定）:
-  1. スキーマを Drizzle で定義し、Supabase にマイグレーション。
-  2. 認証: Supabase Auth（メール/パスワード + OAuth）で session を取得。
-  3. API ルート: `/api/listening/start|stop`, `/api/posts`, `/api/timeline`, `/api/users/:id`, `/api/users/:id/follow` を実装。
-  4. クライアント側: タイムライン/プロフィール/リスニング/投稿ページで API を呼び、SWR/React Query か server actions でデータ取得。
-  5. いいね/フォローは RLS と Auth を踏まえて mutation API を追加。
+## ステータス
 
-### テーブル概要
-- users: id, handle, display_name, icon_url, bio, created_at, updated_at
-- tracks: id, title, artist, service, service_track_id, url, thumbnail_url, duration_ms, created_at
-- posts: id, user_id (FK users), track_id (FK tracks), comment_text, created_at
-- listening_activities: id, user_id (FK users), track_id (FK tracks), started_at, ended_at, source_type, created_at
-- likes: id, user_id (FK users), post_id (FK posts), created_at
-- follows: follower_id (FK users), followee_id (FK users), created_at
+- [x] Drizzle ORM スキーマ定義 (`schema.ts`)
+- [x] DB クライアント初期化 (`client.ts`)
+- [x] シードスクリプト (`seed.ts`)
+- [ ] Supabase プロジェクト作成・接続
+- [ ] マイグレーション実行
+- [ ] Supabase Auth 設定
+- [ ] RLS ポリシー設定
 
-この段階では UI とモックデータのみ。次のステップで上記ファイルに実装を追加します。
+## セットアップ手順
+
+1. Supabase プロジェクトを作成
+2. `.env.example` を `.env.local` にコピーし、接続情報を記入
+3. `npm run db:push` でスキーマを反映（開発中）
+4. `npm run db:seed` でシードデータを投入
+5. 本番移行時は `npm run db:generate` → `npm run db:migrate` でマイグレーション管理
+
+## ライブラリ
+
+- **Drizzle ORM** — スキーマ定義・クエリビルダー・マイグレーション
+- **postgres** (postgres.js) — PostgreSQL ドライバー
+- **@supabase/supabase-js** — Supabase Auth・Realtime クライアント
+- **@supabase/ssr** — Next.js SSR でのセッション管理
+
+## テーブル概要
+
+| テーブル | 説明 |
+|---------|------|
+| `users` | id (uuid), handle (unique), display_name, icon_url, bio, created_at, updated_at |
+| `tracks` | id (uuid), title, artist, service, service_track_id, url, thumbnail_url, duration_ms, created_at |
+| `posts` | id (uuid), user_id (FK), track_id (FK), comment_text, created_at |
+| `listening_activities` | id (uuid), user_id (FK), track_id (FK), started_at, ended_at, source_type, created_at |
+| `likes` | id (uuid), user_id (FK), post_id (FK), created_at — unique(user_id, post_id) |
+| `follows` | id (uuid), follower_id (FK), followee_id (FK), created_at — unique(follower_id, followee_id) |
+
+## npm scripts
+
+```bash
+npm run db:generate  # マイグレーションファイル生成
+npm run db:migrate   # マイグレーション実行
+npm run db:push      # スキーマを直接 DB に反映（開発用）
+npm run db:studio    # Drizzle Studio（DB ブラウザ）起動
+npm run db:seed      # シードデータ投入
+```
